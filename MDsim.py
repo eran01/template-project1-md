@@ -18,6 +18,7 @@ from scipy.constants import Boltzmann as BOLTZMANN
 
 class Simulation:
     
+    #constructor
     def __init__( self, dt, L, Nsteps=0, R=None, mass=None, kind=None, \
                  p=None, F=None, U=None, K=None, seed=937142, ftype=None, \
                  step=0, printfreq=1000, xyzname="sim.xyz", fac=1.0, \
@@ -67,8 +68,9 @@ class Simulation:
             self.U = 0.0
                
         #set RNG seed
-        np.random.seed( self.seed)
+        np.random.seed( self.seed )
     
+    #desctructor
     def __del__( self ):
         self.xyzfile.close()
         self.outfile.close()
@@ -319,11 +321,15 @@ class Simulation:
     def run( self, **kwargs ):
         """
         THIS FUNCTION DEFINES A SIMULATION DOES, GIVEN AN INSTANCE OF 
-        THE SIMULATION CLASS. YOU WILL NEED TO EVALUATE THE FORCES, PROPAGATE
-        FOR NS TIME STEPS USING THE VELOCITY VERLET ALGORITHM, APPLY PBC, 
-        AND CALCULATE THE KINETIC, POTENTIAL AND TOTAL ENERGY AT EACH TIME 
-        STEP. YOU WILL ALSO NEED TO PRINT THE COORDINATES AND ENERGIES EVERY 
-        PRINTFREQ TIME STEPS TO THEIR RESPECTIVE FILES.
+        THE SIMULATION CLASS. YOU WILL NEED TO:
+            1. EVALUATE THE FORCES (USE evaluateForce() AND PASS A DICTIONARY
+                                    WITH ALL THE PARAMETERS).
+            2. PROPAGATE FOR NS TIME STEPS USING THE VELOCITY VERLET ALGORITHM
+            3. APPLY PBC.
+            4. CALCULATE THE KINETIC, POTENTIAL AND TOTAL ENERGY AT EACH TIME
+            STEP. 
+            5. YOU WILL ALSO NEED TO PRINT THE COORDINATES AND ENERGIES EVERY 
+        PRINTFREQ TIME STEPS TO THEIR RESPECTIVE FILES, xyzfile and outfile.
 
         Returns
         -------
