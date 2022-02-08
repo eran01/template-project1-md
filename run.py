@@ -9,7 +9,7 @@ Created on Sun Feb  6 15:24:36 2022
 #imports
 import numpy as np
 import pandas as pd
-from MD import Simulation
+from sim import Simulation
 
 """
 HERE, TO RUN THE SIMULATION, YOU WILL NEED TO DO THE FOLLOWING THINGS:
