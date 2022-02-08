@@ -5,39 +5,133 @@
 Created on Sun Feb  6 11:55:59 2022
 
 @author: hirshb
+
+
+WELCOME TO YOU FIRST PROJECT! THIS BIT OF TEXT IS CALLED A DOCSTRING.
+BELOW, I HAVE CREATED A CLASS CALLED "SIMULATION" FOR YOUR CONVENIENCE.
+I HAVE ALSO IMPLEMENTED A CONSTRUCTOR, WHICH IS A METHOD THAT IS CALLED 
+EVERY TIME YOUR CREATE AN OBJECT OF THE CLASS USING, FOR EXAMPLE, 
+    
+    >>> sim = Simulation(dt=1, L=1)
+
+I HAVE ALSO IMPLEMENTED SEVERAL USEFUL METHODS THAT YOU CAN CALL AND USE, 
+BUT DO NOT EDIT THEM. THEY ARE: evalForce, dumpXYZ, dumpThermo and readXYZ.
+
+YOU DO NOT NEED TO EDIT THE CLASS ITSELF. 
+
+YOUR JOB IS TO IMPLEMENT THE LIST OF CLASS METHODS DEFINED BELOW WHERE YOU WILL 
+SEE THE FOLLOWING TEXT:    
+
+        ################################################################
+        ####################### YOUR CODE GOES HERE ####################
+        ################################################################
+
+YOU ARE, HOWEVER, EXPECTED TO UNDERSTAND WHAT ARE THE MEMBERS OF THE CLASS
+AND USE THEM IN YOUR IN YOUR IMPLEMENTATION. THEY ARE ALL EXPLAINED IN THE 
+DOCSTRING OF THE CONSTRUCTOR BELOW. BUT, FOR EXAMPLE, WHENEVER YOU WISH 
+TO USE/UPDATE THE MOMENTA OF THE PARTICLES IN ONE OF YOUR METHODS, YOU CAN
+ACCESS IT BY USING self.p. 
+
+    >>> self.p = np.zeros( (self.Natoms,3) )
+        
+FINALLY, YOU WILL NEED TO EDIT THE run.py FILE WHICH RUNS THE SIMULATION.
+SEE MORE INSTRUCTIONS THERE.
+
 """
+################################################################
+################## NO EDITING BELOW THIS LINE ##################
+################################################################
 
 #imports
 import numpy as np
 import pandas as pd
 from scipy.constants import Boltzmann as BOLTZMANN
 
-    ################################################################
-    ################## NO EDITING BELOW THIS LINE ##################
-    ################################################################
-
 class Simulation:
     
-    #constructor
     def __init__( self, dt, L, Nsteps=0, R=None, mass=None, kind=None, \
                  p=None, F=None, U=None, K=None, seed=937142, ftype=None, \
                  step=0, printfreq=1000, xyzname="sim.xyz", fac=1.0, \
                  outname="sim.log", debug=False ):
+        """
+        THIS IS THE CONSTRUCTOR. SEE DETAILED DESCRIPTION OF DATA MEMBERS
+        BELOW. THE DESCRIPTION OF EACH METHOD IS GIVEN IN ITS DOCSTRING.
+
+        Parameters
+        ----------
+        dt : float
+            Simulation time step.
+            
+        L : float
+            Simulation box side length.
+            
+        Nsteps : int, optional
+            Number of steps to take. The default is 0.
+            
+        R : numpy.ndarray, optional
+            Particles' positions, Natoms x 3 array. The default is None.
+            
+        mass : numpy.ndarray, optional
+            Particles' masses, Natoms x 1 array. The default is None.
+            
+        kind : list of str, optional
+            Natoms x 1 list with atom type for printing. The default is None.
+            
+        p : numpy.ndarray, optional
+            Particles' momenta, Natoms x 3 array. The default is None.
+            
+        F : numpy.ndarray, optional
+            Particles' forces, Natoms x 3 array. The default is None.
+            
+        U : float, optional
+            Potential energy . The default is None.
+            
+        K : numpy.ndarray, optional
+            Kinetic energy. The default is None.
+            
+        seed : int, optional
+            Big number for reproducible random numbers. The default is 937142.
+            
+        ftype : str, optional
+            String to call the force evaluation method. The default is None.
+            
+        step : INT, optional
+            Current simulation step. The default is 0.
+            
+        printfreq : int, optional
+            PRINT EVERY printfreq TIME STEPS. The default is 1000.
+            
+        xyzname : TYPE, optional
+            DESCRIPTION. The default is "sim.xyz".
+            
+        fac : float, optional
+            Factor to multiply the positions for printing. The default is 1.0.
+            
+        outname : TYPE, optional
+            DESCRIPTION. The default is "sim.log".
+            
+        debug : bool, optional
+            Controls printing for debugging. The default is False.
+
+        Returns
+        -------
+        None.
+
+        """
         
         #general        
-        self.debug=debug
-        self.printfreq = printfreq
-        self.xyzfile = open( xyzname, 'w' )
-        self.outfile = open( outname, 'w' )
+        self.debug=debug 
+        self.printfreq = printfreq 
+        self.xyzfile = open( xyzname, 'w' ) 
+        self.outfile = open( outname, 'w' ) 
         
         #simulation
-        self.Nsteps = Nsteps
-        self.dt = dt
-        self.L = L
-        self.seed = seed
-        self.step = step
-        self.forcetype = "eval" + ftype
-        self.fac = fac #factor for printing of XYZ in some units other than m
+        self.Nsteps = Nsteps 
+        self.dt = dt 
+        self.L = L 
+        self.seed = seed 
+        self.step = step         
+        self.fac = fac 
         
         #system        
         if R is not None:
@@ -48,7 +142,7 @@ class Simulation:
             self.mass_matrix = np.array( [self.mass,]*3 ).transpose()
         else:
             self.R = np.zeros( (1,3) )
-            self.mass = 1.6735575E-27 #H mass in Kg
+            self.mass = 1.6735575E-27 #H mass in kg as default
             self.kind = ["H"]
             self.Natoms = self.R.shape[0]
             self.mass_matrix = np.array( [self.mass,]*3 ).transpose()
@@ -69,24 +163,38 @@ class Simulation:
                
         #set RNG seed
         np.random.seed( self.seed )
+        
+        #check force type
+        if ( ftype == "LJ" or ftype == "Harm" or ftype == "Anharm"):
+            self.ftype = "eval" + ftype
+        else:
+            raise ValueError("Wrong ftype value - use LJ or Harm or Anharm.")
     
-    #desctructor
     def __del__( self ):
+        """
+        THIS IS THE DESCTRUCTOR. NOT USUALLY NEEDED IN PYTHON. 
+        JUST HERE TO CLOSE THE FILES.
+
+        Returns
+        -------
+        None.
+
+        """
         self.xyzfile.close()
         self.outfile.close()
     
     def evalForce( self, **kwargs ):
         """
         THIS FUNCTION CALLS THE FORCE EVALUATION METHOD, BASED ON THE VALUE
-        OF FORCETYPE AND PASSES ALL OF THE ARGUMENTS (WHATEVER THEY ARE).
+        OF FTYPE AND PASSES ALL OF THE ARGUMENTS (WHATEVER THEY ARE).
 
         Returns
         -------
-        None. Calls the correct method based on self.forcetype.
+        None. Calls the correct method based on self.ftype.
 
         """
         
-        getattr(self, self.forcetype)(**kwargs)
+        getattr(self, self.ftype)(**kwargs)
             
     def dumpThermo( self ):
         """
@@ -138,9 +246,9 @@ class Simulation:
         
         for i in range( self.Natoms ):
             self.xyzfile.write( self.kind[i] + " " + \
-                               "{:.6e}".format( self.R[i,0]*self.fac ) + " " + \
-                               "{:.6e}".format( self.R[i,1]*self.fac ) + " " + \
-                               "{:.6e}".format( self.R[i,2]*self.fac ) + "\n" )
+                              "{:.6e}".format( self.R[i,0]*self.fac ) + " " + \
+                              "{:.6e}".format( self.R[i,1]*self.fac ) + " " + \
+                              "{:.6e}".format( self.R[i,2]*self.fac ) + "\n" )
     
     def readXYZ( self, inpname ):
         """
@@ -167,9 +275,9 @@ class Simulation:
         self.R = df[ [1,2,3] ].to_numpy()
         self.Natoms = self.R.shape[0]
         
-    ################################################################
-    ################## NO EDITING ABOVE THIS LINE ##################
-    ################################################################
+################################################################
+################## NO EDITING ABOVE THIS LINE ##################
+################################################################
     
     
     def sampleMB( self, temp, removeCM=True ):
