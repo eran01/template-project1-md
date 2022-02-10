@@ -46,6 +46,7 @@ SEE MORE INSTRUCTIONS THERE.
 import numpy as np
 import pandas as pd
 from scipy.constants import Boltzmann as BOLTZMANN
+import matplotlib.pyplot as plt
 
 class Simulation:
     
