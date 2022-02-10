@@ -283,7 +283,7 @@ class Simulation:
     def sampleMB( self, temp, removeCM=True ):
         """
         THIS FUNCTIONS SAMPLES INITIAL MOMENTA FROM THE MB DISTRIBUTION.
-        IT ALSO REMOVES THE COM VELOCITY, IF REQUESTED.
+        IT ALSO REMOVES THE COM MOMENTA, IF REQUESTED.
 
         Parameters
         ----------
