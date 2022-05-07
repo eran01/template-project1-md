@@ -161,6 +161,8 @@ class Simulation:
         else:
             self.F = np.zeros( (self.Natoms,3) )
             self.U = 0.0
+            
+        self.E = self.K + self.U
                
         #set RNG seed
         np.random.seed( self.seed )
