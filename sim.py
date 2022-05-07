@@ -87,9 +87,12 @@ class Simulation:
         U : float, optional
             Potential energy . The default is None.
             
-        K : numpy.ndarray, optional
+        K : float, optional
             Kinetic energy. The default is None.
-            
+        
+        E : float, optional
+            Total energy. The default is None.
+                    
         seed : int, optional
             Big number for reproducible random numbers. The default is 937142.
             
