@@ -432,6 +432,19 @@ class Simulation:
         ####################### YOUR CODE GOES HERE ####################
         ################################################################
         
+    def MCstep( self, **kwargs ):
+        """
+        THIS FUNCTIONS PERFORMS ONE METROPOLIS MC STEP.
+
+        Returns
+        -------
+        None. Sets self.R.
+        """
+        
+        ################################################################
+        ####################### YOUR CODE GOES HERE ####################
+        ################################################################
+        
     def run( self, **kwargs ):
         """
         THIS FUNCTION DEFINES A SIMULATION DOES, GIVEN AN INSTANCE OF 
