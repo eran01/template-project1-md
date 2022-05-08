@@ -434,12 +434,31 @@ class Simulation:
         
     def MCstep( self, **kwargs ):
         """
-        THIS FUNCTIONS PERFORMS ONE METROPOLIS MC STEP.
+        THIS FUNCTIONS PERFORMS ONE METROPOLIS MC STEP IN THE NVT ENSEMBLE.
 
         Returns
         -------
         None. Sets self.R.
         """
+        
+        ################################################################
+        ####################### YOUR CODE GOES HERE ####################
+        ################################################################
+    
+    def runMC( self, **kwargs ):
+        """ 
+        THIS FUNCTION DEFINES AN MC SIMULATION DOES, GIVEN AN INSTANCE OF 
+        THE SIMULATION CLASS. YOU WILL NEED TO PROPOSE TRANSLATION MOVES, APPLY  
+        PBC, CALCULATE THE CHANGE IN POTENTIAL ENERGY, ACCEPT OR REJECT, 
+        AND CALCULATE THE ACCEPTANCE PROBABILITY. 
+        YOU WILL ALSO NEED TO PRINT THE COORDINATES AND ENERGIES EVERY 
+        PRINTFREQ TIME STEPS TO THEIR RESPECTIVE FILES.
+
+        Returns
+        -------
+        None.
+
+        """   
         
         ################################################################
         ####################### YOUR CODE GOES HERE ####################
